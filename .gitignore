@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+test.db
+*.db
+.env
+tmp/
+*.zip
+*.shp
+*.shx
+*.dbf
+*.cpg
+*.prj
+*.kml
