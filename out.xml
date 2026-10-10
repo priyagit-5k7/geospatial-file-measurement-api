@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="2" failures="1" skipped="0" tests="4" time="0.833" timestamp="2026-10-10T21:45:34.334072+05:30" hostname="Priyadharshini"><testcase classname="tests.test_api" name="test_root_endpoint" time="0.135"><failure message="assert 404 == 200&#10; +  where 404 = &lt;Response [404 Not Found]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x0000019C27838440&gt;
+
+    def test_root_endpoint(client: TestClient):
+        response = client.get("/api/")
+&gt;       assert response.status_code == 200
+E       assert 404 == 200
+E        +  where 404 = &lt;Response [404 Not Found]&gt;.status_code
+
+tests\test_api.py:5: AssertionError</failure></testcase><testcase classname="tests.test_api" name="test_shapefile_upload_and_measurements" time="0.210"><error message="failed on setup with &quot;pyogrio.errors.FeatureError: Could not add feature to layer at index 1: Attempt to write non-polygon (LINESTRING) geometry to POLYGON type shapefile.&quot;">tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=&lt;pluggy._tracing.TagTracerSub object at 0x0000019C277CC050&gt;, _basetemp=Wi...PriyaDharshini R/AppData/Local/Temp/pytest-of-PriyaDharshini R/pytest-2'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="session")
+    def synthetic_shapefile_zip(tmp_path_factory):
+        # Create simple shapes. EPSG:4326.
+        poly = Polygon([(50.0, 50.0), (51.0, 50.0), (51.0, 51.0), (50.0, 51.0)])
+        line = LineString([(50.0, 50.0), (51.0, 51.0)])
+        pt = Point(50.5, 50.5)
+    
+        gdf = gpd.GeoDataFrame({
+            'geometry': [poly, line, pt],
+            'name': ['box', 'line', 'point'],
+            'value': [10, 20, 30]
+        }, crs="EPSG:4326")
+    
+        temp_dir = tmp_path_factory.mktemp("shapefiles")
+        shp_path = temp_dir / "test_data.shp"
+&gt;       gdf.to_file(shp_path)
+
+tests\conftest.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+venv\Lib\site-packages\geopandas\geodataframe.py:1674: in to_file
+    _to_file(self, filename, driver, schema, index, **kwargs)
+venv\Lib\site-packages\geopandas\io\file.py:737: in _to_file
+    _to_file_pyogrio(df, filename, driver, schema, crs, mode, metadata, **kwargs)
+venv\Lib\site-packages\geopandas\io\file.py:799: in _to_file_pyogrio
+    pyogrio.write_dataframe(df, filename, driver=driver, metadata=metadata, **kwargs)
+venv\Lib\site-packages\pyogrio\geopandas.py:948: in write_dataframe
+    write(
+venv\Lib\site-packages\pyogrio\raw.py:733: in write
+    ogr_write(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+&gt;   ???
+E   pyogrio.errors.FeatureError: Could not add feature to layer at index 1: Attempt to write non-polygon (LINESTRING) geometry to POLYGON type shapefile.
+
+pyogrio/_io.pyx:3219: FeatureError</error></testcase><testcase classname="tests.test_api" name="test_kml_upload" time="0.226" /><testcase classname="tests.test_api" name="test_invalid_file_extension" time="0.036"><error message="failed on teardown with &quot;PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: './test.db'&quot;">@pytest.fixture(scope="session")
+    def client():
+        Base.metadata.create_all(bind=engine)
+        with TestClient(app) as c:
+            yield c
+        Base.metadata.drop_all(bind=engine)
+        if os.path.exists("./test.db"):
+&gt;           os.remove("./test.db")
+E           PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: './test.db'
+
+tests\conftest.py:36: PermissionError</error></testcase></testsuite></testsuites>
